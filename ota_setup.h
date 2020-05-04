@@ -2,15 +2,11 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-#include "wifi_setup.h"
-
 namespace OTA
 {
 
 void setup()
 {
-    WiFiSetup::connect();
-
     // Port defaults to 8266
     // ArduinoOTA.setPort(8266);
 

@@ -1,7 +1,5 @@
 #include <ESP8266WebServer.h>
 
-#include "wifi_setup.h"
-
 namespace WebServer
 {
 ESP8266WebServer server(80);
@@ -99,8 +97,9 @@ void handle_led2off()
     server.send(200, "text/html", SendHTML(LED1status, true));
 }
 
-void restart_page(){
-  server.send(200, "text/html", SendRestartPageHTML());
+void restart_page()
+{
+    server.send(200, "text/html", SendRestartPageHTML());
 }
 
 void restart_esp()
@@ -137,7 +136,6 @@ String SendHTML(uint8_t led1stat, uint8_t led2stat)
     ptr += "<h3>If you can't find the OTA port in the Arduino IDE, try restarting the ESP8266 by going to '&lt;server_ip&gt;/restart' and clicking the restart button.</h3>";
     ptr += "<h3>You should be able to find the OTA port in your IDE then.</h3>\n";
 
-
     if (led1stat == LOW)
     {
         ptr += "<p>LED1 Status: ON</p><a class=\"button button-off\" href=\"/led1off\">OFF</a>\n";
@@ -161,8 +159,9 @@ String SendHTML(uint8_t led1stat, uint8_t led2stat)
     return ptr;
 }
 
-String SendRestartPageHTML(){
-      String ptr = "<!DOCTYPE html> <html>\n";
+String SendRestartPageHTML()
+{
+    String ptr = "<!DOCTYPE html> <html>\n";
     ptr += "<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, user-scalable=no\">\n";
     ptr += "<title>Restart ESP8266</title>\n";
     ptr += "<style>html { font-family: Helvetica; display: inline-block; margin: 0px auto; text-align: center;}\n";
@@ -176,9 +175,8 @@ String SendRestartPageHTML(){
 
     ptr += "<a class=\"button button-off\" href=\"/restart_esp\">Restart</a>\n";
 
-
     ptr += "</body>\n";
     ptr += "</html>\n";
     return ptr;
-  }
+}
 } // namespace WebServer
