@@ -42,7 +42,7 @@ void loop()
 void handle_isFogReady()
 {
   bool ready = isFogReady();
-  WebServer::server.send(200, "text/plain", ready ? "Fog is ready" : "Fog is not ready yet, please wait until fog machine is heated up. OR: fog machine is currently fogging.");
+  WebServer::server.send(200, "application/json", ready ? "{\"fog_ready\": true}" : "{\"fog_ready\": 'false}");
 }
 void handle_startFog()
 {
