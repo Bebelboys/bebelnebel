@@ -10,6 +10,15 @@
 #define FOG_READY_SIGNAL_PIN 5
 #define FOG_CONTROL_PIN 15
 
+typedef enum
+{
+  NOT_READY = -1,
+  READY = 0,
+  FOGGING = 1
+} fog_status_enum;
+
+fog_status_enum fogStatus = NOT_READY;
+
 bool isFogReady();
 void startFog();
 void stopFog();
@@ -25,7 +34,7 @@ void setup()
   WebServer::setup();
 
   // Add endpoints
-  WebServer::server.on("/is_fog_ready", handle_isFogReady);
+  WebServer::server.on("/fog_status", handle_fogStatus);
   WebServer::server.on("/start_fog", handle_startFog);
   WebServer::server.on("/stop_fog", handle_stopFog);
 
@@ -39,10 +48,19 @@ void loop()
   WebServer::handle();
 }
 
-void handle_isFogReady()
+void handle_fogStatus()
 {
-  bool ready = isFogReady();
-  WebServer::server.send(200, "application/json", ready ? "{\"fog_ready\": true}" : "{\"fog_ready\": 'false}");
+  if (fogStatus != FOGGING)
+  {
+    bool ready = isFogReady();
+    if (ready)
+    {
+      fogStatus = READY;
+    }
+  }
+    char responseBuffer [30];
+    sprintf(responseBuffer, "{\"fog_status_code\": %d}", fogStatus);
+    WebServer::server.send(200, "application/json", responseBuffer);
 }
 void handle_startFog()
 {
@@ -78,9 +96,12 @@ bool isFogReady()
 void startFog()
 {
   digitalWrite(FOG_CONTROL_PIN, HIGH);
+  fogStatus = FOGGING;
 }
 
 void stopFog()
 {
   digitalWrite(FOG_CONTROL_PIN, LOW);
+  delay(100);
+  fogStatus = isFogReady() ? READY : NOT_READY;
 }
